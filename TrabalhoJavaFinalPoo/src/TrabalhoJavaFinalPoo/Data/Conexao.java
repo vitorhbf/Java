@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class  Conexao {
+public class Conexao {
 
 	private static String url = "jdbc:postgresql://localhost:5432/TrabalhoJavaFinalPoo";
 	private static String usuario = "postgres";
@@ -21,7 +21,7 @@ public class  Conexao {
 			e.printStackTrace();
 		}
 		return conexao;
-		
+
 	}
 
 	protected static String getUrl() {

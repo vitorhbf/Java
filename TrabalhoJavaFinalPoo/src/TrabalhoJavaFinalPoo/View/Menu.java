@@ -70,14 +70,13 @@ public class Menu {
 
 	}
 
-	
 	private void adicionarEstudante() {
 		System.out.print("Nome do estudante: ");
 		String nome = scanner.nextLine();
-		if (!nome.matches("^[a-zA-Z]+$")) { 
-            System.out.println("Erro: O nome deve conter apenas letras.");
-            return; 
-        }
+		if (!nome.matches("^[a-zA-Z]+$")) {
+			System.out.println("Erro: O nome deve conter apenas letras.");
+			return;
+		}
 
 		List<String> cursosDisponíveis;
 		try {

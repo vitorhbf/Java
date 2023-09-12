@@ -121,7 +121,7 @@ public class BancoDeDados extends Conexao {
 		}
 	}
 
-	public  List<String> listarCursos() throws SQLException {
+	public List<String> listarCursos() throws SQLException {
 		List<String> cursosDisponíveis = new ArrayList<>();
 		String sql = "SELECT * FROM curso";
 
@@ -184,8 +184,6 @@ public class BancoDeDados extends Conexao {
 
 		return estudantes;
 	}
-	
-	
 
 	public String getNomeCursoPeloId(int idCurso) throws SQLException {
 		String sql = "SELECT nome FROM curso WHERE id = ?";
