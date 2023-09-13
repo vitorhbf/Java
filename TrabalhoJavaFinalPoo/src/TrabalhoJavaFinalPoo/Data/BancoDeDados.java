@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import TrabalhoJavaFinalPoo.Model.Curso;
 import TrabalhoJavaFinalPoo.Model.Estudante;
 
 public class BancoDeDados {
@@ -78,9 +79,9 @@ public class BancoDeDados {
 				ResultSet generatedKeys = stmt.getGeneratedKeys();
 				if (generatedKeys.next()) {
 					int idCurso = generatedKeys.getInt(1);
-					System.out.println("Curso cadastrado com sucesso! ID: " + idCurso);
+					System.out.println("Curso cadastrado com sucesso! Codigo: " + idCurso);
 				} else {
-					System.out.println("Erro ao obter o ID do curso após a inserção.");
+					System.out.println("Erro ao obter o Codigo do curso após a inserção.");
 				}
 			} else {
 				System.out.println("Erro ao cadastrar curso.");
@@ -92,18 +93,19 @@ public class BancoDeDados {
 	}
 
 	public void inserirEstudante(Estudante estudante) throws SQLException {
+		
 		String sql = "INSERT INTO estudante (nome, curso_id) VALUES (?, ?)";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 			stmt.setString(1, estudante.getNomeAluno());
-			stmt.setInt(2, estudante.getIdCurso());
+			stmt.setInt(2, estudante.getId());
 			int rowsInserted = stmt.executeUpdate();
 			if (rowsInserted > 0) {
 				ResultSet generatedKeys = stmt.getGeneratedKeys();
 				if (generatedKeys.next()) {
 					estudante.setIdAluno(generatedKeys.getInt(1));
-					System.out.println("\nEstudante cadastrado com sucesso! ID: " + estudante.getIdAluno());
+					System.out.println("\nEstudante cadastrado com sucesso! Codigo: " + estudante.getIdAluno());
 				} else {
-					System.out.println("Erro ao obter o ID do estudante após a inserção.");
+					System.out.println("Erro ao obter o Codigo do estudante após a inserção.");
 				}
 			} else {
 				System.out.println("Erro ao cadastrar estudante.");
@@ -114,8 +116,8 @@ public class BancoDeDados {
 		}
 	}
 
-	public List<String> listarCursos() throws SQLException {
-		List<String> cursosDisponíveis = new ArrayList<>();
+	public List<Curso> listarCursos() throws SQLException {
+		List<Curso> cursosDisponíveis = new ArrayList<>();
 		String sql = "SELECT * FROM curso";
 
 		try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet resultado = stmt.executeQuery()) {
@@ -123,7 +125,8 @@ public class BancoDeDados {
 			while (resultado.next()) {
 				int id = resultado.getInt("id");
 				String nome = resultado.getString("nome");
-				cursosDisponíveis.add(id + " - " + nome);
+				Curso curso = new Curso(id, nome);
+				cursosDisponíveis.add(curso);
 
 			}
 		} catch (SQLException e) {
@@ -143,7 +146,7 @@ public class BancoDeDados {
 				return resultado.getInt("id");
 			}
 		} catch (SQLException e) {
-			System.out.println("Erro ao obter o ID do curso: " + e.getMessage());
+			System.out.println("Erro ao obter o Codigo do curso: " + e.getMessage());
 			throw e;
 		}
 		return -1;
@@ -159,8 +162,9 @@ public class BancoDeDados {
 				int id = resultado.getInt("id");
 				String nome = resultado.getString("nome");
 				int cursoId = resultado.getInt("curso_id");
-
-				Estudante estudante = new Estudante(nome, "", cursoId);
+				
+				
+				Estudante estudante = new Estudante(cursoId ,"", nome );
 				estudante.setIdAluno(id);
 
 				estudantes.add(estudante);
@@ -171,8 +175,8 @@ public class BancoDeDados {
 		}
 
 		for (Estudante estudante : estudantes) {
-			String nomeCurso = getNomeCursoPeloId(estudante.getIdCurso());
-			estudante.setNomeCurso(nomeCurso);
+			String nomeCurso = getNomeCursoPeloId(estudante.getId());
+			estudante.setNome(nomeCurso);
 		}
 
 		return estudantes;
@@ -235,14 +239,14 @@ public class BancoDeDados {
 				int id = resultado.getInt("id");
 				String nome = resultado.getString("nome");
 
-				System.out.println("ID: " + id + ", Nome: " + nome);
+				System.out.println("Código: " + id + ", Nome: " + nome);
 			}
 		} catch (SQLException e) {
 			System.out.println("Não foi possível acessar a tabela curso!!!");
 			throw e;
 		}
 
-		int idCurso = lerInteiro("Qual curso deseja remover: ");
+		int idCurso = lerInteiro("\nQual curso deseja remover: ");
 		sql = "DELETE FROM curso WHERE id = ?";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.setInt(1, idCurso);
@@ -265,7 +269,7 @@ public class BancoDeDados {
 				int valor = Integer.parseInt(scanner.nextLine());
 				return valor;
 			} catch (NumberFormatException e) {
-				System.out.println("Entrada inválida! Digite um número inteiro válido, referente ao ID.");
+				System.out.println("Entrada inválida! Digite um número inteiro válido, referente ao Codigo.");
 			}
 		}
 	}

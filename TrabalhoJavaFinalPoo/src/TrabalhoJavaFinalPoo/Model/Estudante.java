@@ -1,17 +1,31 @@
 package TrabalhoJavaFinalPoo.Model;
 
-public class Estudante {
+public class Estudante extends Curso {
 	private String nomeAluno;
-	private String nomeCurso;
-	private int idCurso;
 	protected int idAluno;
-	private static int proximoId = 1;
 
-	public Estudante(String nomeAluno, String nomeCurso, int idCursoEscolhido) {
+	public Estudante(Integer id, String nome, String nomeAluno) {
+		super(id, nome);
 		this.nomeAluno = nomeAluno;
-		this.nomeCurso = nomeCurso;
-		this.idCurso = idCursoEscolhido;
-		this.idAluno = proximoId++;
+
+	}
+
+	@Override
+	public Integer getId() {
+
+		return super.getId();
+	}
+
+	@Override
+	public String getNome() {
+
+		return super.getNome();
+	}
+
+	@Override
+	public void setNome(String nome) {
+		// TODO Auto-generated method stub
+		super.setNome(nome);
 	}
 
 	public String getNomeAluno() {
@@ -22,32 +36,17 @@ public class Estudante {
 		this.nomeAluno = nomeAluno;
 	}
 
-	public String getNomeCurso() {
-		return nomeCurso;
-	}
-
-	public void setNomeCurso(String nomeCurso) {
-		this.nomeCurso = nomeCurso;
-	}
-
-	public int getIdCurso() {
-		return idCurso;
-	}
-
-	public void setIdCurso(int idCurso) {
-		this.idCurso = idCurso;
-	}
-
 	public int getIdAluno() {
 		return idAluno;
 	}
 
 	public void setIdAluno(int idAluno) {
-		this.idAluno = idAluno;
+		this.idAluno = idAluno++;
 	}
 
 	@Override
 	public String toString() {
-		return "\nId do Aluno: " + idAluno + "\nNome do Aluno : " + nomeAluno + "\nNome do Curso: " + nomeCurso + "\n";
+		return "\nId do Aluno: " + idAluno + "\nNome do Aluno : " + nomeAluno + "\nNome do Curso: " + super.getNome()
+				+ "\n";
 	}
 }
