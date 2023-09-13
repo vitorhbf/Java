@@ -19,6 +19,9 @@ public class SistemaGerenciamentoEstudantes {
 			System.exit(1);
 		}
 	}
+	
+	
+	
 
 	public static void main(String[] args) throws SQLException {
 		SistemaGerenciamentoEstudantes gerenciamento = new SistemaGerenciamentoEstudantes();
