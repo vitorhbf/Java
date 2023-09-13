@@ -19,6 +19,7 @@ public class Menu {
 	}
 
 	public void exibirMenu() throws SQLException {
+
 		String opcao;
 
 		do {
@@ -56,7 +57,7 @@ public class Menu {
 				listarEstudantes();
 				break;
 			case "7":
-				bancoDeDados.listarCursos();
+				listarCurso();
 				break;
 			case "8":
 				System.out.println("Programa encerrado! Até logo!");
@@ -64,56 +65,54 @@ public class Menu {
 			default:
 				System.out.println("Opção inválida. Tente novamente.");
 			}
-		} while (opcao != "7");
+		} while (!opcao.equals("8"));
 
 		scanner.close();
 
 	}
 
 	private void adicionarEstudante() {
-		System.out.print("Nome do estudante: ");
-		String nome = scanner.nextLine();
-		if (!nome.matches("^[a-zA-Z]+$")) {
-			System.out.println("Erro: O nome deve conter apenas letras.");
-			return;
-		}
+	    System.out.print("Nome do estudante: ");
+	    String nome = scanner.nextLine();
 
-		List<String> cursosDisponíveis;
-		try {
-			cursosDisponíveis = bancoDeDados.listarCursos();
+	    List<String> cursosDisponíveis;
+	    try {
+	        cursosDisponíveis = bancoDeDados.listarCursos();
 
-			if (cursosDisponíveis.isEmpty()) {
-				System.out.println("Nenhum curso cadastrado. Não é possível adicionar o estudante.");
-				return;
-			}
+	        if (cursosDisponíveis.isEmpty()) {
+	            System.out.println("Nenhum curso cadastrado. Não é possível adicionar o estudante.");
+	            return;
+	        }
 
-			System.out.println("Cursos disponíveis:");
-			for (int i = 0; i < cursosDisponíveis.size(); i++) {
-				System.out.println((i + 1) + " - " + cursosDisponíveis.get(i));
-			}
+	        System.out.println("Cursos disponíveis:");
+	        for (String curso : cursosDisponíveis) {
+	            System.out.println(curso);
+	        }
 
-			System.out.print("Escolha o número do curso: ");
-			int escolhaCurso = scanner.nextInt();
-			scanner.nextLine();
+	        int escolhaCurso = bancoDeDados.lerInteiro("Escolha o número do curso: ");
 
-			if (escolhaCurso >= 1 && escolhaCurso <= cursosDisponíveis.size()) {
-				String nomeCursoEscolhido = cursosDisponíveis.get(escolhaCurso - 1);
-				int idCursoEscolhido = bancoDeDados.getIdCursoPeloNome(nomeCursoEscolhido);
-				Estudante estudante = new Estudante(nome, nomeCursoEscolhido, idCursoEscolhido);
-				gerenciamento.adicionarEstudante(estudante);
+	        for (String curso : cursosDisponíveis) {
+	            String[] parts = curso.split(" - ");
+	            int idCurso = Integer.parseInt(parts[0]);
 
-			} else {
-				System.out.println("Escolha de curso inválida.");
-			}
-		} catch (SQLException e) {
-			System.out.println("Erro ao adicionar estudante: " + e.getMessage());
-		}
+	            if (idCurso == escolhaCurso) {
+	                Estudante estudante = new Estudante(nome, parts[1], idCurso);
+	                bancoDeDados.inserirEstudante(estudante);   
+	                return;
+	            }
+	        }
+
+	        System.out.println("Escolha de curso inválida.");
+	    } catch (SQLException e) {
+	        System.out.println("Erro ao adicionar estudante: " + e.getMessage());
+	    }
 	}
+
 
 	private void editarEstudante() {
 		List<Estudante> estudantes;
 		try {
-			estudantes = gerenciamento.listarEstudantes();
+			estudantes = bancoDeDados.listarEstudantes();
 		} catch (SQLException e) {
 			System.out.println("Erro ao listar estudantes: " + e.getMessage());
 			return;
@@ -142,40 +141,46 @@ public class Menu {
 
 		List<String> cursosDisponíveis;
 		try {
-			cursosDisponíveis = bancoDeDados.listarCursos();
-			if (cursosDisponíveis.isEmpty()) {
-				System.out.println("Nenhum curso cadastrado. Não é possível editar o curso do estudante.");
-			} else {
-				System.out.println("Cursos disponíveis:");
-				for (int i = 0; i < cursosDisponíveis.size(); i++) {
-					System.out.println((i + 1) + " - " + cursosDisponíveis.get(i));
-				}
+		    cursosDisponíveis = bancoDeDados.listarCursos();
+		    if (cursosDisponíveis.isEmpty()) {
+		        System.out.println("Nenhum curso cadastrado. Não é possível editar o curso do estudante.");
+		    } else {
+		        System.out.println("Cursos disponíveis:");
 
-				System.out.print("Escolha o número do novo curso (ou pressione Enter para manter o curso atual): ");
-				String escolhaCursoStr = scanner.nextLine();
-				int novoIdCurso = -1;
-				if (!escolhaCursoStr.isEmpty()) {
-					int escolhaCurso = Integer.parseInt(escolhaCursoStr);
-					if (escolhaCurso >= 1 && escolhaCurso <= cursosDisponíveis.size()) {
-						String nomeCursoEscolhido = cursosDisponíveis.get(escolhaCurso - 1);
-						novoIdCurso = bancoDeDados.getIdCursoPeloNome(nomeCursoEscolhido);
-					} else {
-						System.out.println("Escolha de curso inválida. O curso atual será mantido.");
-					}
-				} else {
-					novoIdCurso = estudanteExistente.getIdCurso();
-				}
+		        for (int i = 0; i < cursosDisponíveis.size(); i++) {
+		            String[] parts = cursosDisponíveis.get(i).split(" - ");
+		           
+		            String cursoNome = parts[1];
+		            System.out.println((i+1) + " - " + cursoNome);
+		        }
 
-				try {
-					gerenciamento.editarEstudante(id, novoNome, novoIdCurso);
 
-				} catch (SQLException e) {
-					System.out.println("Erro ao editar estudante: " + e.getMessage());
-				}
-			}
+		        System.out.print("Escolha o número do novo curso (ou pressione Enter para manter o curso atual): ");
+		        String escolhaCursoStr = scanner.nextLine();
+
+		        int novoIdCurso = -1; 
+
+		        if (!escolhaCursoStr.isEmpty()) {
+		            try {
+		                int escolhaCurso = Integer.parseInt(escolhaCursoStr);
+		                if (escolhaCurso >= 1 && escolhaCurso <= cursosDisponíveis.size()) {
+		                    String nomeCursoEscolhido = cursosDisponíveis.get(escolhaCurso - 1);
+		                    novoIdCurso = Integer.parseInt(nomeCursoEscolhido.split(" - ")[0]); 
+		                } else {
+		                    System.out.println("Escolha de curso inválida. O curso atual será mantido.");
+		                }
+		            } catch (NumberFormatException e) {
+		                System.out.println("Entrada inválida. O curso atual será mantido.");
+		            }
+		        }
+
+		        
+		        gerenciamento.editarEstudante(id, novoNome, novoIdCurso);
+		    }
 		} catch (SQLException e) {
-			System.out.println("Erro ao listar cursos: " + e.getMessage());
+		    System.out.println("Erro ao listar cursos: " + e.getMessage());
 		}
+
 	}
 
 	private void removerEstudante() {
@@ -216,7 +221,7 @@ public class Menu {
 	private void listarEstudantes() {
 		List<Estudante> estudantes;
 		try {
-			estudantes = gerenciamento.listarEstudantes();
+			estudantes = bancoDeDados.listarEstudantes();
 		} catch (SQLException e) {
 			System.out.println("Erro ao listar estudantes: " + e.getMessage());
 			return;
@@ -231,6 +236,28 @@ public class Menu {
 			}
 		}
 	}
+	private void listarCurso() {
+		List<String> cursos;
+		try {
+			cursos = bancoDeDados.listarCursos();
+			
+		} catch (SQLException e) {
+			System.out.println("Erro ao listar Cursos: " + e.getMessage());
+			return;
+		}
+
+		if (cursos.isEmpty()) {
+			System.out.println("Nenhum Curso cadastrado.");
+		} else {
+			System.out.println("Lista de Cursos:");
+			for (String estudante : cursos) {
+				System.out.println(estudante);
+			}
+		}
+	}
+	
+	
+	
 
 	private void cadastrarCursos() {
 		System.out.print("Nome do curso: ");
@@ -252,4 +279,5 @@ public class Menu {
 		}
 		return null;
 	}
+	
 }

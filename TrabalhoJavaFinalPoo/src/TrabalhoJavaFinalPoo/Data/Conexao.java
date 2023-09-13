@@ -10,7 +10,7 @@ public class Conexao {
 	private static String usuario = "postgres";
 	private static String senha = "@Vitorhb10";
 
-	public static Connection obterConexao(String url, String usuario, String senha) {
+	public static Connection obterConexao() {
 		Connection conexao = null;
 		try {
 

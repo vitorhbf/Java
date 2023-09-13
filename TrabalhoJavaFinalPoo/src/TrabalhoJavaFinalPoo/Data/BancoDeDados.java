@@ -2,7 +2,6 @@ package TrabalhoJavaFinalPoo.Data;
 
 import java.sql.Connection;
 
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +12,7 @@ import java.util.Scanner;
 
 import TrabalhoJavaFinalPoo.Model.Estudante;
 
-public class BancoDeDados extends Conexao {
+public class BancoDeDados {
 	Connection conexao;
 	Scanner scanner = new Scanner(System.in);
 
@@ -24,14 +23,8 @@ public class BancoDeDados extends Conexao {
 
 	public BancoDeDados() throws SQLException {
 
-		try {
-			conexao = DriverManager.getConnection(Conexao.getUrl(), Conexao.getUsuario(), Conexao.getSenha());
-			System.out.println("Conexão com banco de dados estabelecida com sucesso!");
-		} catch (SQLException e) {
-			System.out.println("Não foi possível obter a conexão com o banco de dados!");
-			e.printStackTrace();
-			throw e;
-		}
+		conexao = Conexao.obterConexao();
+
 	}
 
 	public void criarTabelaCurso() throws SQLException {
@@ -108,7 +101,7 @@ public class BancoDeDados extends Conexao {
 				ResultSet generatedKeys = stmt.getGeneratedKeys();
 				if (generatedKeys.next()) {
 					estudante.setIdAluno(generatedKeys.getInt(1));
-					System.out.println("Estudante cadastrado com sucesso! ID: " + estudante.getIdAluno());
+					System.out.println("\nEstudante cadastrado com sucesso! ID: " + estudante.getIdAluno());
 				} else {
 					System.out.println("Erro ao obter o ID do estudante após a inserção.");
 				}
@@ -130,8 +123,8 @@ public class BancoDeDados extends Conexao {
 			while (resultado.next()) {
 				int id = resultado.getInt("id");
 				String nome = resultado.getString("nome");
+				cursosDisponíveis.add(id + " - " + nome);
 
-				System.out.println("ID: " + id + ", Nome: " + nome);
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao listar cursos: " + e.getMessage());
@@ -276,4 +269,5 @@ public class BancoDeDados extends Conexao {
 			}
 		}
 	}
+
 }

@@ -7,7 +7,7 @@ import TrabalhoJavaFinalPoo.Model.Estudante;
 import TrabalhoJavaFinalPoo.View.Menu;
 
 public class SistemaGerenciamentoEstudantes {
-
+	
 	private BancoDeDados bancoDeDados;
 
 	public SistemaGerenciamentoEstudantes() {
@@ -19,9 +19,6 @@ public class SistemaGerenciamentoEstudantes {
 			System.exit(1);
 		}
 	}
-	
-	
-	
 
 	public static void main(String[] args) throws SQLException {
 		SistemaGerenciamentoEstudantes gerenciamento = new SistemaGerenciamentoEstudantes();
@@ -33,11 +30,7 @@ public class SistemaGerenciamentoEstudantes {
 	public List<Estudante> listarEstudantes() throws SQLException {
 		return bancoDeDados.listarEstudantes();
 	}
-
-	public void adicionarEstudante(Estudante estudante) throws SQLException {
-		bancoDeDados.inserirEstudante(estudante);
-	}
-
+	
 	public void removerEstudante(int id) throws SQLException {
 		bancoDeDados.removerEstudante(id);
 	}
