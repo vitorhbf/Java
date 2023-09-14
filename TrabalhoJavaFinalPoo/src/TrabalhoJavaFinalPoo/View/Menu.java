@@ -18,10 +18,9 @@ public class Menu {
 		this.gerenciamento = gerenciamento;
 		this.bancoDeDados = bancoDeDados;
 	}
-//teste
+
 	public void exibirMenu() throws SQLException {
 
-		
 		String opcao;
 
 		do {
@@ -98,7 +97,7 @@ public class Menu {
 				int idCurso = curso.getId();
 
 				if (idCurso == escolhaCurso) {
-					Estudante estudante = new Estudante(idCurso, curso.getNome(),nome);
+					Estudante estudante = new Estudante(idCurso, curso.getNome(), nome);
 					bancoDeDados.inserirEstudante(estudante);
 					return;
 				}
@@ -150,7 +149,7 @@ public class Menu {
 
 				int i = 0;
 				for (Curso curso : cursosDisponíveis) {
-					
+
 					i++;
 					System.out.println(curso);
 				}
