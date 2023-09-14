@@ -9,361 +9,393 @@ import TrabalhoJavaFinalPoo.Model.Curso;
 import TrabalhoJavaFinalPoo.Model.Estudante;
 
 public class Menu {
-    private Scanner scanner = new Scanner(System.in);
-    private SistemaGerenciamentoEstudantes gerenciamento;
-    private BancoDeDados bancoDeDados;
+	private Scanner scanner = new Scanner(System.in);
+	private SistemaGerenciamentoEstudantes gerenciamento;
+	private BancoDeDados bancoDeDados;
 
-    public Menu(SistemaGerenciamentoEstudantes gerenciamento, BancoDeDados bancoDeDados) {
-        this.gerenciamento = gerenciamento;
-        this.bancoDeDados = bancoDeDados;
-    }
+	public Menu(SistemaGerenciamentoEstudantes gerenciamento, BancoDeDados bancoDeDados) {
+		this.gerenciamento = gerenciamento;
+		this.bancoDeDados = bancoDeDados;
+	}
 
-    public void exibirMenu() throws SQLException {
-        String opcao;
+	public void exibirMenu() throws Exception {
+		String opcao;
 
-        do {
-            // Apresenta o menu de opções ao usuário
-            System.out.println("\nMenu de opções:\n");
-            System.out.println("1 - Cadastrar Curso");
-            System.out.println("2 - Cadastrar Estudante");
-            System.out.println("3 - Editar Estudante");
-            System.out.println("4 - Remover Estudante");
-            System.out.println("5 - Remover Curso");
-            System.out.println("6 - Listar Estudantes");
-            System.out.println("7 - Listar Cursos");
-            System.out.println("8 - Encerrar/Sair\n");
-            System.out.print("Escolha uma opção: ");
-            opcao = scanner.next();
-            scanner.nextLine();
+		do {
+			// Apresenta o menu de opções ao usuário
+			System.out.println("\nMenu de opções:\n");
+			System.out.println("1 - Cadastrar Curso");
+			System.out.println("2 - Cadastrar Estudante");
+			System.out.println("3 - Editar Estudante");
+			System.out.println("4 - Remover Estudante");
+			System.out.println("5 - Remover Curso");
+			System.out.println("6 - Listar Estudantes");
+			System.out.println("7 - Listar Cursos");
+			System.out.println("8 - Encerrar/Sair\n");
+			System.out.print("Escolha uma opção: ");
+			opcao = scanner.next();
+			scanner.nextLine();
 
-            switch (opcao) {
-                case "1":
-                    cadastrarCursos();
-                    break;
-                case "2":
-                    adicionarEstudante();
-                    break;
-                case "3":
-                    editarEstudante();
-                    break;
-                case "4":
-                    removerEstudante();
-                    break;
-                case "5":
-                    removerCurso();
-                    break;
-                case "6":
-                    listarEstudantes();
-                    break;
-                case "7":
-                    listarCurso();
-                    break;
-                case "8":
-                    System.out.println("Programa encerrado! Até logo!");
-                    break;
-                default:
-                    System.out.println("Opção inválida. Tente novamente.");
-            }
-        } while (!opcao.equals("8"));
+			switch (opcao) {
+			case "1":
+				cadastrarCursos();
+				break;
+			case "2":
+				adicionarEstudante();
+				break;
+			case "3":
+				editarEstudante();
+				break;
+			case "4":
+				removerEstudante();
+				break;
+			case "5":
+				removerCurso();
+				break;
+			case "6":
+				listarEstudantes();
+				break;
+			case "7":
+				listarCurso();
+				break;
+			case "8":
+				System.out.println("Programa encerrado! Até logo!");
+				
+				break;
+			default:
+				System.out.println("Opção inválida. Tente novamente.");
+			}
+		} while (!opcao.equals("8"));
 
-        scanner.close();
-    }
+		scanner.close();
+	}
 
-    private void adicionarEstudante() {
-        // Solicita o nome do estudante ao usuário
-        System.out.print("Nome do estudante: ");
-        String nome = lerApenasLetrasComEspacos(scanner);
+	private void adicionarEstudante() {
+		// Solicita o nome do estudante ao usuário
+		System.out.print("\nNome do estudante: ");
+		String nome = lerApenasLetrasComEspacos(scanner);
 
-        List<Curso> cursosDisponíveis;
-        try {
-            // Obtém a lista de cursos disponíveis do banco de dados
-            cursosDisponíveis = bancoDeDados.listarCursos();
+		List<Curso> cursosDisponiveis;
+		try {
+			// Obtém a lista de cursos disponíveis do banco de dados
+			cursosDisponiveis = bancoDeDados.listarCursos();
 
-            if (cursosDisponíveis.isEmpty()) {
-                System.out.println("\nNenhum curso cadastrado. Não é possível adicionar o estudante.");
-                return;
-            }
+			if (cursosDisponiveis.isEmpty()) {
+				System.out.println("\nNenhum curso cadastrado. Não é possível adicionar o estudante.");
+				return;
+			}
 
-            System.out.println("\nCursos disponíveis:");
-            for (Curso curso : cursosDisponíveis) {
-                System.out.println(curso);
-            }
+			System.out.println("\nCursos disponíveis:");
+			for (Curso curso : cursosDisponiveis) {
+				System.out.println(curso);
+			}
 
-            // Solicita ao usuário que escolha um curso
-            int escolhaCurso = lerInteiro("\nEscolha o número do curso: ");
+			// Solicita ao usuário que escolha um curso
+			int escolhaCurso = lerInteiro("\nEscolha o número do curso: ");
 
-            Curso cursoEscolhido = null;
-            for (Curso curso : cursosDisponíveis) {
-                if (curso.getId() == escolhaCurso) {
-                    cursoEscolhido = curso;
-                    break;
-                }
-            }
+			Curso cursoEscolhido = null;
+			for (Curso curso : cursosDisponiveis) {
+				if (curso.getId() == escolhaCurso) {
+					cursoEscolhido = curso;
+					break;
+				}
+			}
 
-            if (cursoEscolhido != null) {
-                // Cria um objeto Estudante com as informações fornecidas
-                Estudante estudante = new Estudante(cursoEscolhido.getId(), cursoEscolhido.getNome(), nome);
-                
-                // Insere o estudante no banco de dados
-                bancoDeDados.inserirEstudante(estudante);
-                
-                System.out.println("\nEstudante adicionado com sucesso!");
-            } else {
-                System.out.println("\nCurso escolhido não existe. Não foi possível adicionar o estudante.");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("\nErro ao adicionar o estudante.");
-        }
-    }
+			if (cursoEscolhido != null) {
+				// Cria um objeto Estudante com as informações fornecidas
+				Estudante estudante = new Estudante(cursoEscolhido.getId(), cursoEscolhido.getNome(), nome);
 
-    private void editarEstudante() {
-        List<Estudante> estudantes;
-        try {
-            estudantes = bancoDeDados.listarEstudantes();
-        } catch (SQLException e) {
-            System.out.println("Erro ao listar estudantes: " + e.getMessage());
-            return;
-        }
+				// Insere o estudante no banco de dados
+				bancoDeDados.inserirEstudante(estudante);
 
-        if (estudantes.isEmpty()) {
-            System.out.println("Nenhum estudante cadastrado para editar.");
-            return;
-        }
+				System.out.println("\nEstudante adicionado com sucesso!");
+			} else {
+				System.out.println("\nCurso escolhido não existe. Não foi possível adicionar o estudante.");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("\nErro ao adicionar o estudante.");
+		}
+	}
 
-        System.out.println("Lista de Estudantes:\n");
-        for (Estudante estudante : estudantes) {
-            System.out.println("Codigo: " + estudante.getIdAluno() + " - Nome: " + estudante.getNomeAluno());
-        }
+	private void editarEstudante() throws Exception {
+		List<Estudante> estudantes;
+		try {
+			estudantes = bancoDeDados.listarEstudantes();
+		} catch (SQLException e) {
+			System.out.println("Erro ao listar estudantes: " + e.getMessage());
+			return;
+		}
 
-        int id = lerInteiro("\nDigite o Codigo do estudante a ser editado: ");
+		if (estudantes.isEmpty()) {
+			System.out.println("Nenhum estudante cadastrado para editar.");
+			return;
+		}
 
-        Estudante estudanteExistente = buscarEstudante(id, estudantes);
-        if (estudanteExistente == null) {
-            System.out.println("Estudante não encontrado.");
-            return;
-        }
+		System.out.println("Lista de Estudantes:\n");
+		for (Estudante estudante : estudantes) {
+			System.out.println("Código: " + estudante.getIdAluno() + " - Nome: " + estudante.getNomeAluno());
+		}
 
-        // Solicita o novo nome do estudante
-        System.out.print("Novo nome do estudante: ");
-        String novoNome = scanner.nextLine();
+		int id = lerInteiro("\nDigite o Código do estudante a ser editado: ");
 
-        List<Curso> cursosDisponíveis;
-        try {
-            cursosDisponíveis = bancoDeDados.listarCursos();
-            if (cursosDisponíveis.isEmpty()) {
-                System.out.println("Nenhum curso cadastrado. Não é possível editar o curso do estudante.");
-            } else {
-                System.out.println("Cursos disponíveis:\n");
+		Estudante estudanteExistente = buscarEstudante(id, estudantes);
+		if (estudanteExistente == null) {
+			System.out.println("Estudante não encontrado.");
+			return;
+		}
 
-                int i = 0;
-                for (Curso curso : cursosDisponíveis) {
-                    i++;
-                    System.out.println(curso);
-                }
+		System.out.println("\nO que você deseja editar?");
+		System.out.println("1 - Nome");
+		System.out.println("2 - Curso");
+		System.out.println("3 - Nome e Curso");
+		System.out.println("4 - Cancelar");
 
-                // Solicita ao usuário que escolha um novo curso (ou mantenha o atual)
-                System.out.print("\nEscolha o número do novo curso (ou pressione Enter para manter o curso atual): ");
-                String escolhaCursoStr = scanner.nextLine();
+		int opcao = lerInteiro("\nEscolha uma opção: ");
 
-                int novoIdCurso = -1;
+		switch (opcao) {
+		case 1:
+			// Editar apenas o nome do estudante
+			editarNomeEstudante(estudanteExistente);
+			break;
+		case 2:
+			// Editar apenas o curso do estudante
+			editarCursoEstudante(estudanteExistente);
+			break;
+		case 3:
+			// Editar nome e curso do estudante
+			editarNomeEstudante(estudanteExistente);
+			editarCursoEstudante(estudanteExistente);
+			break;
+		case 4:
+			System.out.println("Operação cancelada.");
+			break;
+		default:
+			System.out.println("Opção inválida.");
+		}
+	}
 
-                if (!escolhaCursoStr.isEmpty()) {
-                    try {
-                        int escolhaCurso = Integer.parseInt(escolhaCursoStr);
-                        if (escolhaCurso >= 1 && escolhaCurso <= cursosDisponíveis.get(cursosDisponíveis.size() - 1).getId()) {
-                            Curso cursoEscolhido = new Curso(1, escolhaCursoStr);
-                            for (Curso curso : cursosDisponíveis) {
-                                if (curso.getId() == escolhaCurso) {
-                                    cursoEscolhido = curso;
-                                }
-                            }
-                            novoIdCurso = cursoEscolhido.getId();
-                        } else {
-                            System.out.println("Escolha de curso inválida.");
-                        }
-                    } catch (NumberFormatException e) {
-                        System.out.println("Entrada inválida. O curso atual será mantido.");
-                    }
-                }
+	private void editarNomeEstudante(Estudante estudante) throws SQLException {
+		System.out.print("Novo nome do estudante: ");
+		String novoNome = scanner.nextLine();
 
-                // Chama o método de edição do estudante
-                gerenciamento.editarEstudante(id, novoNome, novoIdCurso);
-                
-                // Atualiza o nome do estudante no banco de dados
-                boolean sucesso = bancoDeDados.atualizarNomeEstudante(id, novoNome, novoIdCurso);
+		// Atualiza o nome do estudante no banco de dados
+		boolean sucesso = bancoDeDados.atualizarNomeEstudante(estudante.getIdAluno(), novoNome, estudante.getId());
 
-                if (sucesso) {
-                    System.out.println("\nEstudante editado com sucesso!");
-                } else {
-                    System.out.println("\nFalha ao editar o estudante.");
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Erro ao listar cursos: " + e.getMessage());
-        }
-    }
+		if (sucesso) {
+			System.out.println("\nNome do estudante editado com sucesso!");
+		} else {
+			System.out.println("\nFalha ao editar o nome do estudante.");
+		}
+	}
 
-    private void removerEstudante() {
-        List<Estudante> estudantes;
-        try {
-            estudantes = gerenciamento.listarEstudantes();
-        } catch (SQLException e) {
-            System.out.println("Erro ao listar estudantes: " + e.getMessage());
-            return;
-        }
+	private void editarCursoEstudante(Estudante estudante) {
+		List<Curso> cursosDisponiveis;
+		try {
+			cursosDisponiveis = bancoDeDados.listarCursos();
+			if (cursosDisponiveis.isEmpty()) {
+				System.out.println("Nenhum curso cadastrado. Não é possível editar o curso do estudante.");
+			} else {
+				System.out.println("Cursos disponíveis:\n");
 
-        if (estudantes.isEmpty()) {
-            System.out.println("Nenhum estudante cadastrado para remover.");
-            return;
-        }
+				for (Curso curso : cursosDisponiveis) {
+					System.out.println(curso);
+				}
 
-        System.out.println("Lista de Estudantes:\n");
-        for (Estudante estudante : estudantes) {
-            System.out.println("Codigo: " + estudante.getIdAluno() + " - Nome: " + estudante.getNomeAluno());
-        }
+				// Solicita ao usuário que escolha um novo curso (ou mantenha o atual)
+				System.out.print("\nEscolha o número do novo curso (ou pressione Enter para manter o curso atual): ");
+				String escolhaCursoStr = scanner.nextLine();
 
-        int id = lerInteiro("\nDigite o Codigo do estudante a ser removido: ");
+				int novoIdCurso = estudante.getId(); // Mantém o curso atual por padrão
 
-        Estudante estudanteExistente = buscarEstudante(id, estudantes);
-        if (estudanteExistente == null) {
-            System.out.println("Estudante não encontrado.");
-            return;
-        } else {
-            System.out.println("Estudante Removido com Sucesso!");
-        }
+				if (!escolhaCursoStr.isEmpty()) {
+					try {
+						int escolhaCurso = Integer.parseInt(escolhaCursoStr);
+						if (escolhaCurso >= 1
+								&& escolhaCurso <= cursosDisponiveis.get(cursosDisponiveis.size() - 1).getId()) {
+							novoIdCurso = escolhaCurso;
+						} else {
+							System.out.println("Escolha de curso inválida.");
+						}
+					} catch (NumberFormatException e) {
+						System.out.println("Entrada inválida. O curso atual será mantido.");
+					}
+				}
 
-        try {
-            // Remove o estudante do banco de dados
-            gerenciamento.removerEstudante(id);
-        } catch (SQLException e) {
-            System.out.println("Erro ao remover estudante: " + e.getMessage());
-        }
-    }
+				// Atualiza o curso do estudante no banco de dados
+				boolean sucesso = bancoDeDados.atualizarCursoEstudante(estudante.getIdAluno(), novoIdCurso);
 
-    private void removerCurso() {
-        try {
-            listarCurso();
-            System.out.println("\nCursos Listados com Sucesso!");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("\nNão foi possível Listar Cursos!");
-        }
+				if (sucesso) {
+					System.out.println("\nCurso do estudante editado com sucesso!");
+				} else {
+					System.out.println("\nFalha ao editar o curso do estudante.");
+				}
+			}
+		} catch (SQLException e) {
+			System.out.println("Erro ao listar cursos: " + e.getMessage());
+		}
+	}
 
-        try {
-            int idCurso = lerInteiro("\nQual curso deseja remover: ");
-            List<String> estudantesAssociados = bancoDeDados.verificarEstudantesAssociados(idCurso);
+	private void removerEstudante() {
+		List<Estudante> estudantes;
+		try {
+			estudantes = gerenciamento.listarEstudantes();
+		} catch (SQLException e) {
+			System.out.println("Erro ao listar estudantes: " + e.getMessage());
+			return;
+		}
 
-            if (!estudantesAssociados.isEmpty()) {
-                System.out.println("\nNão é possível remover o curso, pois está associado aos seguintes estudantes:\n");
-                for (String nomeEstudante : estudantesAssociados) {
-                    System.out.println(nomeEstudante);
-                }
-            } else {
-                boolean removidoComSucesso = bancoDeDados.removerCurso(idCurso);
+		if (estudantes.isEmpty()) {
+			System.out.println("Nenhum estudante cadastrado para remover.");
+			return;
+		}
 
-                if (removidoComSucesso) {
-                    System.out.println("\nCurso removido com sucesso!");
-                } else {
-                    System.out.println("\nNão foi possível remover o curso.");
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("\nNão foi possível Acessar Cursos!");
-        }
-    }
+		System.out.println("Lista de Estudantes:\n");
+		for (Estudante estudante : estudantes) {
+			System.out.println("Codigo: " + estudante.getIdAluno() + " - Nome: " + estudante.getNomeAluno());
+		}
 
-    private void listarEstudantes() {
-        List<Estudante> estudantes;
-        try {
-            estudantes = bancoDeDados.listarEstudantes();
-        } catch (SQLException e) {
-            System.out.println("Erro ao listar estudantes: " + e.getMessage());
-            return;
-        }
+		int id = lerInteiro("\nDigite o Codigo do estudante a ser removido: ");
 
-        if (estudantes.isEmpty()) {
-            System.out.println("Nenhum estudante cadastrado.");
-        } else {
-            System.out.println("Lista de Estudantes:");
-            for (Estudante estudante : estudantes) {
-                System.out.println(estudante);
-            }
-        }
-    }
+		Estudante estudanteExistente = buscarEstudante(id, estudantes);
+		if (estudanteExistente == null) {
+			System.out.println("Estudante não encontrado.");
+			return;
+		} else {
+			System.out.println("Estudante Removido com Sucesso!");
+		}
 
-    private void listarCurso() {
-        List<Curso> cursos;
-        try {
-            cursos = bancoDeDados.listarCursos();
+		try {
+			// Remove o estudante do banco de dados
+			gerenciamento.removerEstudante(id);
+		} catch (SQLException e) {
+			System.out.println("Erro ao remover estudante: " + e.getMessage());
+		}
+	}
 
-        } catch (SQLException e) {
-            System.out.println("Erro ao listar Cursos: " + e.getMessage());
-            return;
-        }
+	private void removerCurso() {
+		try {
+			listarCurso();
+			System.out.println("\nCursos Listados com Sucesso!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("\nNão foi possível Listar Cursos!");
+		}
 
-        if (cursos.isEmpty()) {
-            System.out.println("Nenhum Curso cadastrado.");
-        } else {
-            System.out.println("Lista de Cursos:\n");
-            for (Curso curso : cursos) {
-                System.out.println(curso);
-            }
-        }
-    }
+		try {
+			int idCurso = lerInteiro("\nQual curso deseja remover: ");
+			List<String> estudantesAssociados = bancoDeDados.verificarEstudantesAssociados(idCurso);
 
-    private void cadastrarCursos() {
-        System.out.print("Nome do curso: ");
-        String nomeCurso = scanner.nextLine();
+			if (!estudantesAssociados.isEmpty()) {
+				System.out.println("\nNão é possível remover o curso, pois está associado aos seguintes estudantes:\n");
+				for (String nomeEstudante : estudantesAssociados) {
+					System.out.println(nomeEstudante);
+				}
+			} else {
+				boolean removidoComSucesso = bancoDeDados.removerCurso(idCurso);
 
-        try {
-            int idCurso = bancoDeDados.inserirCurso(nomeCurso);
-            if (idCurso != -1) {
-                System.out.println("\nCurso cadastrado com sucesso! nº: " + idCurso);
-            } else {
-                System.out.println("\nErro ao cadastrar curso.");
-            }
-        } catch (SQLException e) {
-            System.out.println("\nErro ao cadastrar curso: " + e.getMessage());
-        }
-    }
+				if (removidoComSucesso) {
+					System.out.println("\nCurso removido com sucesso!");
+				} else {
+					System.out.println("\nNão foi possível remover o curso.");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("\nNão foi possível Acessar Cursos!");
+		}
+	}
 
-    private Estudante buscarEstudante(int id, List<Estudante> estudantes) {
-        for (Estudante estudante : estudantes) {
-            if (estudante.getIdAluno() == id) {
-                return estudante;
-            }
-        }
-        return null;
-    }
+	private void listarEstudantes() {
+		List<Estudante> estudantes;
+		try {
+			estudantes = bancoDeDados.listarEstudantes();
+		} catch (SQLException e) {
+			System.out.println("Erro ao listar estudantes: " + e.getMessage());
+			return;
+		}
 
-    private int lerInteiro(String mensagem) {
-        while (true) {
-            System.out.print(mensagem);
-            try {
-                int valor = Integer.parseInt(scanner.nextLine());
-                return valor;
-            } catch (NumberFormatException e) {
-                System.out.println("Entrada inválida! Digite um número inteiro válido.");
-            }
-        }
-    }
+		if (estudantes.isEmpty()) {
+			System.out.println("Nenhum estudante cadastrado.");
+		} else {
+			System.out.println("Lista de Estudantes:");
+			for (Estudante estudante : estudantes) {
+				System.out.println(estudante);
+			}
+		}
+	}
 
-    public static String lerApenasLetrasComEspacos(Scanner scanner) {
-        String entrada = "";
-        boolean contemApenasLetras = false;
+	private void listarCurso() {
+		List<Curso> cursos;
+		try {
+			cursos = bancoDeDados.listarCursos();
 
-        while (!contemApenasLetras) {
-            entrada = scanner.nextLine();
+		} catch (SQLException e) {
+			System.out.println("Erro ao listar Cursos: " + e.getMessage());
+			return;
+		}
 
-            if (entrada.matches("^[a-zA-Z\\s]+$")) {
-                contemApenasLetras = true;
-            } else {
-                System.out.println("Por favor, insira apenas letras e espaços: ");
-            }
-        }
+		if (cursos.isEmpty()) {
+			System.out.println("Nenhum Curso cadastrado.");
+		} else {
+			System.out.println("Lista de Cursos:\n");
+			for (Curso curso : cursos) {
+				System.out.println(curso);
+			}
+		}
+	}
 
-        return entrada;
-    }
+	private void cadastrarCursos() {
+		System.out.print("\nNome do curso: ");
+		String nomeCurso = scanner.nextLine();
+
+		try {
+			int idCurso = bancoDeDados.inserirCurso(nomeCurso);
+			if (idCurso != -1) {
+				System.out.println("\nCurso cadastrado com sucesso! Código: " + idCurso);
+			} else {
+				System.out.println("\nErro ao cadastrar curso.");
+			}
+		} catch (SQLException e) {
+			System.out.println("\nErro ao cadastrar curso: " + e.getMessage());
+		}
+	}
+
+	private Estudante buscarEstudante(int id, List<Estudante> estudantes) {
+		for (Estudante estudante : estudantes) {
+			if (estudante.getIdAluno() == id) {
+				return estudante;
+			}
+		}
+		return null;
+	}
+
+	private int lerInteiro(String mensagem) {
+		while (true) {
+			System.out.print(mensagem);
+			try {
+				int valor = Integer.parseInt(scanner.nextLine());
+				return valor;
+			} catch (NumberFormatException e) {
+				System.out.println("Entrada inválida! Digite um número inteiro válido.");
+			}
+		}
+	}
+
+	public static String lerApenasLetrasComEspacos(Scanner scanner) {
+		String entrada = "";
+		boolean contemApenasLetras = false;
+
+		while (!contemApenasLetras) {
+			entrada = scanner.nextLine();
+
+			if (entrada.matches("^[a-zA-Z\\s]+$")) {
+				contemApenasLetras = true;
+			} else {
+				System.out.println("Por favor, insira apenas letras e espaços: ");
+			}
+		}
+
+		return entrada;
+	}
 }
