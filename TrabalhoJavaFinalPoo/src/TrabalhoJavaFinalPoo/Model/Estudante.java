@@ -1,52 +1,36 @@
 package TrabalhoJavaFinalPoo.Model;
 
 public class Estudante extends Curso {
-	private String nomeAluno;
-	protected int idAluno;
+    // A classe Estudante herda da classe Curso
 
-	public Estudante(Integer id, String nome, String nomeAluno) {
-		super(id, nome);
-		this.nomeAluno = nomeAluno;
+    private String nomeAluno; // Nome do estudante
+    protected int idAluno; // ID do estudante
 
-	}
+    // Construtor da classe Estudante
+    public Estudante(Integer id, String nome, String nomeAluno) {
+        super(id, nome); // Chama o construtor da classe pai (Curso) passando o ID e nome do curso
+        this.nomeAluno = nomeAluno; // Inicializa o nome do estudante
+    }
 
-	@Override
-	public Integer getId() {
+    public String getNomeAluno() {
+        return nomeAluno; // Retorna o nome do estudante
+    }
 
-		return super.getId();
-	}
+    public void setNomeAluno(String nomeAluno) {
+        this.nomeAluno = nomeAluno; // Define o nome do estudante
+    }
 
-	@Override
-	public String getNome() {
+    public int getIdAluno() {
+        return idAluno; // Retorna o ID do estudante
+    }
 
-		return super.getNome();
-	}
+    public void setIdAluno(int idAluno) {
+        this.idAluno = idAluno++; // Define o ID do estudante incrementando o valor atual
+    }
 
-	@Override
-	public void setNome(String nome) {
-
-		super.setNome(nome);
-	}
-
-	public String getNomeAluno() {
-		return nomeAluno;
-	}
-
-	public void setNomeAluno(String nomeAluno) {
-		this.nomeAluno = nomeAluno;
-	}
-
-	public int getIdAluno() {
-		return idAluno;
-	}
-
-	public void setIdAluno(int idAluno) {
-		this.idAluno = idAluno++;
-	}
-
-	@Override
-	public String toString() {
-		return "\nId do Aluno: " + idAluno + "\nNome do Aluno : " + nomeAluno + "\nNome do Curso: " + super.getNome()
-				+ "\n";
-	}
+    @Override
+    public String toString() {
+        // Gera uma representação em formato de string do objeto Estudante
+        return "\nId do Aluno: " + idAluno + "\nNome do Aluno : " + nomeAluno + "\nNome do Curso: " + super.getNome() + "\n";
+    }
 }
