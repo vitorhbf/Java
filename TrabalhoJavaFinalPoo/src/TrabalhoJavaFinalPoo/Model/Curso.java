@@ -7,7 +7,7 @@ public class Curso {
 
 	public Curso(Integer idCurso, String nomeCurso) {
 
-		this.idCurso= idCurso;
+		this.idCurso = idCurso;
 		this.nomeCurso = nomeCurso;
 	}
 
@@ -16,7 +16,7 @@ public class Curso {
 	}
 
 	public void setId(Integer idCurso) {
-		this.idCurso= idCurso;
+		this.idCurso = idCurso;
 	}
 
 	public String getNome() {
@@ -31,6 +31,5 @@ public class Curso {
 	public String toString() {
 		return "Código: " + this.idCurso + " - Nome: " + this.nomeCurso;
 	}
-
 
 }

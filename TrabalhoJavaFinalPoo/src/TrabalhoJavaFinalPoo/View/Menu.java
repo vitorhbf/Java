@@ -52,7 +52,7 @@ public class Menu {
 				removerEstudante();
 				break;
 			case "5":
-				bancoDeDados.removerCurso();
+				removerCurso();
 				break;
 			case "6":
 				listarEstudantes();
@@ -74,7 +74,7 @@ public class Menu {
 
 	private void adicionarEstudante() {
 		System.out.print("Nome do estudante: ");
-		String nome = scanner.nextLine();
+		String nome = lerApenasLetrasComEspacos(scanner);
 
 		List<Curso> cursosDisponíveis;
 		try {
@@ -90,22 +90,26 @@ public class Menu {
 				System.out.println(curso);
 			}
 
-			int escolhaCurso = bancoDeDados.lerInteiro("\nEscolha o número do curso: ");
+			int escolhaCurso = lerInteiro("\nEscolha o número do curso: ");
 
+			Curso cursoEscolhido = null;
 			for (Curso curso : cursosDisponíveis) {
-
-				int idCurso = curso.getId();
-
-				if (idCurso == escolhaCurso) {
-					Estudante estudante = new Estudante(idCurso, curso.getNome(), nome);
-					bancoDeDados.inserirEstudante(estudante);
-					return;
+				if (curso.getId() == escolhaCurso) {
+					cursoEscolhido = curso;
+					break;
 				}
 			}
 
-			System.out.println("Escolha de curso inválida.");
+			if (cursoEscolhido != null) {
+				Estudante estudante = new Estudante(cursoEscolhido.getId(), cursoEscolhido.getNome(), nome);
+				bancoDeDados.inserirEstudante(estudante);
+				System.out.println("\nEstudante adicionado com sucesso!");
+			} else {
+				System.out.println("\nCurso escolhido não existe. Não foi possível adicionar o estudante.");
+			}
 		} catch (SQLException e) {
-			System.out.println("Erro ao adicionar estudante: " + e.getMessage());
+			e.printStackTrace();
+			System.out.println("\nErro ao adicionar o estudante.");
 		}
 	}
 
@@ -128,7 +132,7 @@ public class Menu {
 			System.out.println("Codigo: " + estudante.getIdAluno() + " - Nome: " + estudante.getNomeAluno());
 		}
 
-		int id = bancoDeDados.lerInteiro("\nDigite o Codigo do estudante a ser editado: ");
+		int id = lerInteiro("\nDigite o Codigo do estudante a ser editado: ");
 
 		Estudante estudanteExistente = buscarEstudante(id, estudantes);
 		if (estudanteExistente == null) {
@@ -149,7 +153,6 @@ public class Menu {
 
 				int i = 0;
 				for (Curso curso : cursosDisponíveis) {
-
 					i++;
 					System.out.println(curso);
 				}
@@ -164,18 +167,19 @@ public class Menu {
 						int escolhaCurso = Integer.parseInt(escolhaCursoStr);
 						if (escolhaCurso >= 1
 								&& escolhaCurso <= cursosDisponíveis.get(cursosDisponíveis.size() - 1).getId()) {
-							Curso cursoEscolhido = new Curso(1, "Teste");
+							Curso cursoEscolhido = new Curso(1, escolhaCursoStr);
 							for (Curso curso : cursosDisponíveis) {
 								if (curso.getId() == escolhaCurso) {
 
 									cursoEscolhido = curso;
-
 								}
 
 							}
 							novoIdCurso = cursoEscolhido.getId();
+
 						} else {
-							System.out.println("Escolha de curso inválida. O curso atual será mantido.");
+
+							System.out.println("Escolha de curso inválida.");
 						}
 					} catch (NumberFormatException e) {
 						System.out.println("Entrada inválida. O curso atual será mantido.");
@@ -183,6 +187,13 @@ public class Menu {
 				}
 
 				gerenciamento.editarEstudante(id, novoNome, novoIdCurso);
+				boolean sucesso = bancoDeDados.atualizarNomeEstudante(id, novoNome, novoIdCurso);
+
+				if (sucesso) {
+					System.out.println("\nEstudante editado com sucesso!");
+				} else {
+					System.out.println("\nFalha ao editar o estudante.");
+				}
 			}
 		} catch (SQLException e) {
 			System.out.println("Erro ao listar cursos: " + e.getMessage());
@@ -209,12 +220,15 @@ public class Menu {
 			System.out.println("Codigo: " + estudante.getIdAluno() + " - Nome: " + estudante.getNomeAluno());
 		}
 
-		int id = bancoDeDados.lerInteiro("\nDigite o Codigo do estudante a ser removido: ");
+		int id = lerInteiro("\nDigite o Codigo do estudante a ser removido: ");
 
 		Estudante estudanteExistente = buscarEstudante(id, estudantes);
 		if (estudanteExistente == null) {
 			System.out.println("Estudante não encontrado.");
 			return;
+		} else {
+
+			System.out.println("Estudante Removido com Sucesso!");
 		}
 
 		try {
@@ -222,6 +236,39 @@ public class Menu {
 
 		} catch (SQLException e) {
 			System.out.println("Erro ao remover estudante: " + e.getMessage());
+		}
+	}
+
+	private void removerCurso() {
+		try {
+			listarCurso();
+			System.out.println("\nCursos Listados com Sucesso!");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("\nNão foi possível Listar Cursos!");
+		}
+
+		try {
+			int idCurso = lerInteiro("\nQual curso deseja remover: ");
+			List<String> estudantesAssociados = bancoDeDados.verificarEstudantesAssociados(idCurso);
+
+			if (!estudantesAssociados.isEmpty()) {
+				System.out.println("\nNão é possível remover o curso, pois está associado aos seguintes estudantes:\n");
+				for (String nomeEstudante : estudantesAssociados) {
+					System.out.println(nomeEstudante);
+				}
+			} else {
+				boolean removidoComSucesso = bancoDeDados.removerCurso(idCurso);
+
+				if (removidoComSucesso) {
+					System.out.println("\nCurso removido com sucesso!");
+				} else {
+					System.out.println("\nNão foi possível remover o curso.");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("\nNão foi possível Acessar Cursos!");
 		}
 	}
 
@@ -265,14 +312,18 @@ public class Menu {
 	}
 
 	private void cadastrarCursos() {
-		System.out.print("\nNome do curso: ");
+		System.out.print("Nome do curso: ");
 		String nomeCurso = scanner.nextLine();
 
 		try {
-			bancoDeDados.inserirCurso(nomeCurso);
-
+			int idCurso = bancoDeDados.inserirCurso(nomeCurso);
+			if (idCurso != -1) {
+				System.out.println("\nCurso cadastrado com sucesso! nº: " + idCurso);
+			} else {
+				System.out.println("\nErro ao cadastrar curso.");
+			}
 		} catch (SQLException e) {
-			System.out.println("Erro ao cadastrar curso: " + e.getMessage());
+			System.out.println("\nErro ao cadastrar curso: " + e.getMessage());
 		}
 	}
 
@@ -285,4 +336,33 @@ public class Menu {
 		return null;
 	}
 
+	private int lerInteiro(String mensagem) {
+		while (true) {
+			System.out.print(mensagem);
+			try {
+				int valor = Integer.parseInt(scanner.nextLine());
+				return valor;
+			} catch (NumberFormatException e) {
+				System.out.println("Entrada inválida! Digite um número inteiro válido.");
+			}
+		}
+
+	}
+
+	public static String lerApenasLetrasComEspacos(Scanner scanner) {
+		String entrada = "";
+		boolean contemApenasLetras = false;
+
+		while (!contemApenasLetras) {
+			entrada = scanner.nextLine();
+
+			if (entrada.matches("^[a-zA-Z\\s]+$")) {
+				contemApenasLetras = true;
+			} else {
+				System.out.println("Por favor, insira apenas letras e espaços: ");
+			}
+		}
+
+		return entrada;
+	}
 }

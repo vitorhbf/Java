@@ -1,6 +1,7 @@
 package TrabalhoJavaFinalPoo;
 
 import java.sql.SQLException;
+
 import java.util.List;
 import TrabalhoJavaFinalPoo.Data.BancoDeDados;
 import TrabalhoJavaFinalPoo.Model.Estudante;
@@ -12,8 +13,26 @@ public class SistemaGerenciamentoEstudantes {
 
 	public SistemaGerenciamentoEstudantes() {
 		try {
+
 			bancoDeDados = new BancoDeDados();
-			bancoDeDados.criarTabelas();
+
+			if (bancoDeDados.criarTabelaEstudante() == false) {
+
+				System.out.println("Tabela 'Estudante' criada com sucesso!");
+
+			} else {
+
+				System.out.println("Conexão Realizada a tabela existente");
+			}
+			if (bancoDeDados.criarTabelaCurso() == false) {
+
+				System.out.println("Tabela 'curso' criada com sucesso!");
+
+			} else {
+
+				System.out.println("Conexão Realizada a tabela existente");
+			}
+
 		} catch (SQLException e) {
 			System.err.println("Erro ao conectar ao banco de dados ou criar tabelas: " + e.getMessage());
 			System.exit(1);
@@ -23,8 +42,10 @@ public class SistemaGerenciamentoEstudantes {
 	public static void main(String[] args) throws SQLException {
 		SistemaGerenciamentoEstudantes gerenciamento = new SistemaGerenciamentoEstudantes();
 
+		BancoDeDados bd = new BancoDeDados();
 		Menu menu = new Menu(gerenciamento, gerenciamento.bancoDeDados);
 		menu.exibirMenu();
+		bd.fecharConexao();
 	}
 
 	public List<Estudante> listarEstudantes() throws SQLException {
@@ -37,6 +58,6 @@ public class SistemaGerenciamentoEstudantes {
 
 	public void editarEstudante(int id, String novoNome, int novoIdCurso) throws SQLException {
 		bancoDeDados.atualizarNomeEstudante(id, novoNome, novoIdCurso);
-	}
 
+	}
 }

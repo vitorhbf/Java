@@ -24,7 +24,7 @@ public class Estudante extends Curso {
 
 	@Override
 	public void setNome(String nome) {
-		
+
 		super.setNome(nome);
 	}
 
