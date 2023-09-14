@@ -90,7 +90,7 @@ public class Menu {
 				System.out.println(curso);
 			}
 
-			int escolhaCurso = bancoDeDados.lerInteiro("Escolha o número do curso: ");
+			int escolhaCurso = bancoDeDados.lerInteiro("\nEscolha o número do curso: ");
 
 			for (Curso curso : cursosDisponíveis) {
 
@@ -145,7 +145,7 @@ public class Menu {
 			if (cursosDisponíveis.isEmpty()) {
 				System.out.println("Nenhum curso cadastrado. Não é possível editar o curso do estudante.");
 			} else {
-				System.out.println("Cursos disponíveis:");
+				System.out.println("Cursos disponíveis:\n");
 
 				int i = 0;
 				for (Curso curso : cursosDisponíveis) {
@@ -154,7 +154,7 @@ public class Menu {
 					System.out.println(curso);
 				}
 
-				System.out.print("Escolha o número do novo curso (ou pressione Enter para manter o curso atual): ");
+				System.out.print("\nEscolha o número do novo curso (ou pressione Enter para manter o curso atual): ");
 				String escolhaCursoStr = scanner.nextLine();
 
 				int novoIdCurso = -1;
@@ -265,7 +265,7 @@ public class Menu {
 	}
 
 	private void cadastrarCursos() {
-		System.out.print("Nome do curso: ");
+		System.out.print("\nNome do curso: ");
 		String nomeCurso = scanner.nextLine();
 
 		try {
