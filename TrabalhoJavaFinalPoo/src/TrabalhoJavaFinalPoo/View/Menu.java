@@ -18,9 +18,10 @@ public class Menu {
 		this.gerenciamento = gerenciamento;
 		this.bancoDeDados = bancoDeDados;
 	}
-
+//teste
 	public void exibirMenu() throws SQLException {
 
+		
 		String opcao;
 
 		do {
