@@ -24,7 +24,7 @@ public class Estudante extends Curso {
 
 	@Override
 	public void setNome(String nome) {
-		// TODO Auto-generated method stub
+		
 		super.setNome(nome);
 	}
 

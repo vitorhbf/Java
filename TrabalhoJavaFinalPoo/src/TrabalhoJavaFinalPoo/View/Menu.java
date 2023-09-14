@@ -123,12 +123,12 @@ public class Menu {
 			return;
 		}
 
-		System.out.println("Lista de Estudantes:");
+		System.out.println("Lista de Estudantes:\n");
 		for (Estudante estudante : estudantes) {
 			System.out.println("Codigo: " + estudante.getIdAluno() + " - Nome: " + estudante.getNomeAluno());
 		}
 
-		int id = bancoDeDados.lerInteiro("Digite o Codigo do estudante a ser editado: ");
+		int id = bancoDeDados.lerInteiro("\nDigite o Codigo do estudante a ser editado: ");
 
 		Estudante estudanteExistente = buscarEstudante(id, estudantes);
 		if (estudanteExistente == null) {
