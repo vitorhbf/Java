@@ -9,6 +9,7 @@ import TrabalhoJavaFinalPoo.Model.Curso;
 import TrabalhoJavaFinalPoo.Model.Estudante;
 
 public class Menu {
+
 	private Scanner scanner = new Scanner(System.in);
 	private SistemaGerenciamentoEstudantes gerenciamento;
 	private BancoDeDados bancoDeDados;
@@ -59,15 +60,16 @@ public class Menu {
 				listarCurso();
 				break;
 			case "8":
-				System.out.println("Programa encerrado! Até logo!");
-
+				System.out.println("Conexão Encerrada com o Banco De dados! ");
 				break;
 			default:
 				System.out.println("Opção inválida. Tente novamente.");
+
 			}
 		} while (!opcao.equals("8"));
 
 		scanner.close();
+		bancoDeDados.fecharConexao();
 	}
 
 	private void adicionarEstudante() {

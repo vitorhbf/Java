@@ -10,7 +10,6 @@ public class SistemaGerenciamentoEstudantes {
 
 	private BancoDeDados bancoDeDados;
 
-	// Construtor da classe
 	public SistemaGerenciamentoEstudantes() {
 		try {
 			bancoDeDados = new BancoDeDados();
@@ -48,15 +47,10 @@ public class SistemaGerenciamentoEstudantes {
 		// Inicializa a classe principal do sistema
 		SistemaGerenciamentoEstudantes gerenciamento = new SistemaGerenciamentoEstudantes();
 
-		// Cria uma instância do BancoDeDados
-		BancoDeDados bd = new BancoDeDados();
-
 		// Cria um menu e exibe o menu para o usuário
 		Menu menu = new Menu(gerenciamento, gerenciamento.bancoDeDados);
 		menu.exibirMenu();
 
-		// Fecha a conexão com o banco de dados
-		bd.fecharConexao();
 	}
 
 	// Método para listar estudantes
