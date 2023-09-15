@@ -13,26 +13,32 @@ public class SistemaGerenciamentoEstudantes {
 	// Construtor da classe
 	public SistemaGerenciamentoEstudantes() {
 		try {
-			// Inicializa a conexão com o banco de dados
 			bancoDeDados = new BancoDeDados();
 
-			// Verifica se a tabela 'Estudante' já existe no banco de dados. Se não existir,
-			// cria.
-			if (bancoDeDados.criarTabelaEstudante() == true) {
-				System.out.println("Tabela 'Estudante' criada com sucesso!");
-			} else {
+			// Verifica se a tabela 'Estudante' já existe no banco de dados
+			if (bancoDeDados.verificarTabelaExistente("estudante")) {
 				System.out.println("Conexão realizada com sucesso à tabela 'Estudante'!");
+			} else {
+				// Se a tabela 'Estudante' não existe, cria-a
+				if (bancoDeDados.criarTabelaEstudante()) {
+					System.out.println("Tabela 'Estudante' criada com sucesso!");
+				} else {
+					System.out.println("Erro ao criar a tabela 'Estudante'!");
+				}
 			}
 
-			// Verifica se a tabela 'curso' já existe no banco de dados. Se não existir,
-			// cria.
-			if (bancoDeDados.criarTabelaCurso() == true) {
-				System.out.println("Tabela 'curso' criada com sucesso!");
-			} else {
+			// Verifica se a tabela 'curso' já existe no banco de dados
+			if (bancoDeDados.verificarTabelaExistente("curso")) {
 				System.out.println("Conexão com sucesso realizada à tabela 'curso'!");
+			} else {
+				// Se a tabela 'curso' não existe, cria-a
+				if (bancoDeDados.criarTabelaCurso()) {
+					System.out.println("Tabela 'curso' criada com sucesso!");
+				} else {
+					System.out.println("Erro ao criar a tabela 'curso'!");
+				}
 			}
 		} catch (SQLException e) {
-			// Trata erros de conexão ou criação de tabelas
 			System.err.println("Erro ao conectar ao banco de dados ou criar tabelas: " + e.getMessage());
 			System.exit(1);
 		}

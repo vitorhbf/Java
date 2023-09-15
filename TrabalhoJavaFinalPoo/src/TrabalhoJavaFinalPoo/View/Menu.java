@@ -60,7 +60,7 @@ public class Menu {
 				break;
 			case "8":
 				System.out.println("Programa encerrado! Até logo!");
-				
+
 				break;
 			default:
 				System.out.println("Opção inválida. Tente novamente.");
@@ -259,17 +259,17 @@ public class Menu {
 
 		Estudante estudanteExistente = buscarEstudante(id, estudantes);
 		if (estudanteExistente == null) {
-			System.out.println("Estudante não encontrado.");
+			System.out.println("\nEstudante não encontrado.");
 			return;
 		} else {
-			System.out.println("Estudante Removido com Sucesso!");
+			System.out.println("\nEstudante Removido com Sucesso!");
 		}
 
 		try {
 			// Remove o estudante do banco de dados
 			gerenciamento.removerEstudante(id);
 		} catch (SQLException e) {
-			System.out.println("Erro ao remover estudante: " + e.getMessage());
+			System.out.println("\nErro ao remover estudante: " + e.getMessage());
 		}
 	}
 
@@ -326,22 +326,35 @@ public class Menu {
 	}
 
 	private void listarCurso() {
+		// Declaração de uma lista de cursos que será populada posteriormente
 		List<Curso> cursos;
 		try {
+			// Chama o método para listar cursos no banco de dados
 			cursos = bancoDeDados.listarCursos();
 
-		} catch (SQLException e) {
-			System.out.println("Erro ao listar Cursos: " + e.getMessage());
-			return;
-		}
-
-		if (cursos.isEmpty()) {
-			System.out.println("Nenhum Curso cadastrado.");
-		} else {
-			System.out.println("Lista de Cursos:\n");
-			for (Curso curso : cursos) {
-				System.out.println(curso);
+			// Verifica se a lista de cursos não é nula
+			if (cursos != null) {
+				// Verifica se a lista de cursos está vazia
+				if (cursos.isEmpty()) {
+					// Se estiver vazia, exibe uma mensagem informando que não há cursos cadastrados
+					System.out.println("Nenhum Curso cadastrado.");
+				} else {
+					// Se a lista não estiver vazia, exibe os cursos na lista
+					System.out.println("Lista de Cursos:\n");
+					for (Curso curso : cursos) {
+						System.out.println(curso);
+					}
+				}
+			} else {
+				// Se a lista de cursos retornada for nula, exibe uma mensagem de aviso
+				System.out.println("A lista de cursos retornou como nula.");
 			}
+		} catch (SQLException e) {
+			// Em caso de exceção SQLException, trata o erro da seguinte forma:
+			// - Exibe uma mensagem de erro detalhada no console
+			System.err.println("Erro ao listar Cursos: " + e.getMessage());
+			// - Imprime o rastreamento de pilha completo para fins de depuração
+			e.printStackTrace();
 		}
 	}
 

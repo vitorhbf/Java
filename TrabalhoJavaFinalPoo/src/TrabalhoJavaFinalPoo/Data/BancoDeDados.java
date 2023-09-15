@@ -18,6 +18,19 @@ public class BancoDeDados {
 		conexao = Conexao.obterConexao();
 	}
 
+	// Método para verificar se a tabela existe no banco de dados
+	public boolean verificarTabelaExistente(String nomeTabela) throws SQLException {
+		String sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = ?)";
+		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+			stmt.setString(1, nomeTabela);
+			ResultSet resultado = stmt.executeQuery();
+			if (resultado.next()) {
+				return resultado.getBoolean(1);
+			}
+		}
+		return false;
+	}
+
 	// Método para criar a tabela de cursos no banco de dados
 	public boolean criarTabelaCurso() {
 		String sql = "CREATE TABLE IF NOT EXISTS curso (id SERIAL PRIMARY KEY, nome VARCHAR(255))";
@@ -94,7 +107,7 @@ public class BancoDeDados {
 	// Método para listar todos os estudantes no banco de dados
 	public List<Estudante> listarEstudantes() throws SQLException {
 		List<Estudante> estudantes = new ArrayList<>();
-		String sql = "SELECT id, nome, curso_id FROM estudante";
+		String sql = "SELECT id, nome, curso_id FROM estudante ORDER BY id";
 
 		try (PreparedStatement stmt = conexao.prepareStatement(sql); ResultSet resultado = stmt.executeQuery()) {
 			while (resultado.next()) {
