@@ -16,7 +16,7 @@ public class SistemaGerenciamentoEstudantes {
 
 			// Verifica se a tabela 'Estudante' já existe no banco de dados
 			if (bancoDeDados.verificarTabelaExistente("estudante")) {
-				System.out.println("Conexão realizada com sucesso à tabela 'Estudante'!");
+				System.out.println("Conexão realizada com sucesso aa tabela 'Estudante'!");
 			} else {
 				// Se a tabela 'Estudante' não existe, cria-a
 				if (bancoDeDados.criarTabelaEstudante()) {
